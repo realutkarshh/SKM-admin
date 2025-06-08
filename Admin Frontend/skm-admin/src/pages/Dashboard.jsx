@@ -14,19 +14,19 @@ const Dashboard = () => {
       const token = localStorage.getItem("token");
 
       const [admissions, messages, news, bank] = await Promise.all([
-        fetch("http://localhost:5000/api/admission", {
+        fetch("https://skm-admin.onrender.com/api/admission", {
           headers: { Authorization: `Bearer ${token}` },
         }).then((res) => res.json()),
 
-        fetch("http://localhost:5000/api/contact", {
+        fetch("https://skm-admin.onrender.com/api/contact", {
           headers: { Authorization: `Bearer ${token}` },
         }).then((res) => res.json()),
 
-        fetch("http://localhost:5000/api/news/admin", {
+        fetch("https://skm-admin.onrender.com/api/news/admin", {
           headers: { Authorization: `Bearer ${token}` },
         }).then((res) => res.json()),
 
-        fetch("http://localhost:5000/api/bank").then((res) => res.json()),
+        fetch("https://skm-admin.onrender.com/api/bank").then((res) => res.json()),
       ]);
 
       setData({

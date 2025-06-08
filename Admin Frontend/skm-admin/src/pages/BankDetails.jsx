@@ -20,7 +20,7 @@ const BankDetails = () => {
     upiId: ''
   });
 
-  const BASE_URL = 'http://localhost:5000/api';
+  const BASE_URL = 'https://skm-admin.onrender.com/api';
 
   // Fetch current bank details
   const fetchBankDetails = async () => {

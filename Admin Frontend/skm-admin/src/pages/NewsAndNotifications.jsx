@@ -13,7 +13,7 @@ const NewsAndNotifications = () => {
   });
   const [imagePreview, setImagePreview] = useState(null);
 
-  const BASE_URL = 'http://localhost:5000/api';
+  const BASE_URL = 'https://skm-admin.onrender.com/api';
 
   // Get token from localStorage
   const getAuthToken = () => {

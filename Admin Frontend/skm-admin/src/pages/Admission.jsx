@@ -16,7 +16,7 @@ const AdmissionPage = () => {
       setLoading(true);
       const token = localStorage.getItem('token') || 'your-bearer-token-here';
       
-      const response = await fetch('http://localhost:5000/api/admission', {
+      const response = await fetch('https://skm-admin.onrender.com/api/admission', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

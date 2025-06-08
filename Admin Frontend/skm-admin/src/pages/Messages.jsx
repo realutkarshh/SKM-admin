@@ -23,7 +23,7 @@ const Messages = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/contact', {
+      const response = await fetch('https://skm-admin.onrender.com/api/contact', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
