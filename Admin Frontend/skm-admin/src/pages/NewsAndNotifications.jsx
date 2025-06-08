@@ -1,5 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Calendar, Eye, EyeOff, Save, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Calendar,
+  Eye,
+  EyeOff,
+  Save,
+  X,
+} from "lucide-react";
 
 const NewsAndNotifications = () => {
   const [news, setNews] = useState([]);
@@ -7,36 +16,36 @@ const NewsAndNotifications = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingNews, setEditingNews] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    image: null
+    title: "",
+    description: "",
+    image: null,
   });
   const [imagePreview, setImagePreview] = useState(null);
 
-  const BASE_URL = 'https://skm-admin.onrender.com/api';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   // Get token from localStorage
   const getAuthToken = () => {
-    return localStorage.getItem('token');
+    return localStorage.getItem("token");
   };
 
   // Fetch all news
   const fetchNews = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/news/admin`, {
+      const response = await fetch(`${baseUrl}/news/admin`, {
         headers: {
-          'Authorization': `Bearer ${getAuthToken()}`
-        }
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setNews(data);
       } else {
-        console.error('Failed to fetch news');
+        console.error("Failed to fetch news");
       }
     } catch (error) {
-      console.error('Error fetching news:', error);
+      console.error("Error fetching news:", error);
     } finally {
       setLoading(false);
     }
@@ -44,21 +53,20 @@ const NewsAndNotifications = () => {
 
   // Create new news
   const createNews = async () => {
-    
     const formDataToSend = new FormData();
-    formDataToSend.append('title', formData.title);
-    formDataToSend.append('description', formData.description);
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("description", formData.description);
     if (formData.image) {
-      formDataToSend.append('image', formData.image);
+      formDataToSend.append("image", formData.image);
     }
 
     try {
       const response = await fetch(`${BASE_URL}/news`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${getAuthToken()}`
+          Authorization: `Bearer ${getAuthToken()}`,
         },
-        body: formDataToSend
+        body: formDataToSend,
       });
 
       if (response.ok) {
@@ -67,10 +75,10 @@ const NewsAndNotifications = () => {
         resetForm();
         setShowCreateForm(false);
       } else {
-        console.error('Failed to create news');
+        console.error("Failed to create news");
       }
     } catch (error) {
-      console.error('Error creating news:', error);
+      console.error("Error creating news:", error);
     }
   };
 
@@ -78,43 +86,43 @@ const NewsAndNotifications = () => {
   const updateNews = async (id, updateData) => {
     try {
       const response = await fetch(`${BASE_URL}/news/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Authorization': `Bearer ${getAuthToken()}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${getAuthToken()}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(updateData)
+        body: JSON.stringify(updateData),
       });
 
       if (response.ok) {
         const updatedNews = await response.json();
-        setNews(news.map(item => item._id === id ? updatedNews : item));
+        setNews(news.map((item) => (item._id === id ? updatedNews : item)));
       } else {
-        console.error('Failed to update news');
+        console.error("Failed to update news");
       }
     } catch (error) {
-      console.error('Error updating news:', error);
+      console.error("Error updating news:", error);
     }
   };
 
   // Delete news
   const deleteNews = async (id) => {
-    if (window.confirm('Are you sure you want to delete this news?')) {
+    if (window.confirm("Are you sure you want to delete this news?")) {
       try {
         const response = await fetch(`${BASE_URL}/news/${id}`, {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
-            'Authorization': `Bearer ${getAuthToken()}`
-          }
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
         });
 
         if (response.ok) {
-          setNews(news.filter(item => item._id !== id));
+          setNews(news.filter((item) => item._id !== id));
         } else {
-          console.error('Failed to delete news');
+          console.error("Failed to delete news");
         }
       } catch (error) {
-        console.error('Error deleting news:', error);
+        console.error("Error deleting news:", error);
       }
     }
   };
@@ -127,9 +135,9 @@ const NewsAndNotifications = () => {
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -137,11 +145,11 @@ const NewsAndNotifications = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        image: file
+        image: file,
       }));
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -154,9 +162,9 @@ const NewsAndNotifications = () => {
   // Reset form
   const resetForm = () => {
     setFormData({
-      title: '',
-      description: '',
-      image: null
+      title: "",
+      description: "",
+      image: null,
     });
     setImagePreview(null);
     setEditingNews(null);
@@ -168,7 +176,7 @@ const NewsAndNotifications = () => {
     setFormData({
       title: newsItem.title,
       description: newsItem.description,
-      image: null
+      image: null,
     });
     setImagePreview(null);
   };
@@ -177,19 +185,19 @@ const NewsAndNotifications = () => {
   const saveEdit = async () => {
     await updateNews(editingNews, {
       title: formData.title,
-      description: formData.description
+      description: formData.description,
     });
     resetForm();
   };
 
   // Format date
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -212,8 +220,12 @@ const NewsAndNotifications = () => {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">News & Notifications</h1>
-              <p className="text-gray-600 mt-1">Manage college news and announcements</p>
+              <h1 className="text-3xl font-bold text-gray-900">
+                News & Notifications
+              </h1>
+              <p className="text-gray-600 mt-1">
+                Manage college news and announcements
+              </p>
             </div>
             <button
               onClick={() => setShowCreateForm(true)}
@@ -231,7 +243,9 @@ const NewsAndNotifications = () => {
             <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Create New News</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Create New News
+                  </h2>
                   <button
                     onClick={() => {
                       setShowCreateForm(false);
@@ -321,7 +335,10 @@ const NewsAndNotifications = () => {
         {/* News Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {news.map((newsItem) => (
-            <div key={newsItem._id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div
+              key={newsItem._id}
+              className="bg-white rounded-lg shadow-sm overflow-hidden"
+            >
               {/* Image */}
               {newsItem.imageUrl && (
                 <div className="h-48 overflow-hidden">
@@ -376,7 +393,7 @@ const NewsAndNotifications = () => {
                     <p className="text-gray-600 text-sm mb-3 line-clamp-3">
                       {newsItem.description}
                     </p>
-                    
+
                     <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
                       <Calendar className="h-3 w-3" />
                       <span>{formatDate(newsItem.date)}</span>
@@ -385,11 +402,13 @@ const NewsAndNotifications = () => {
                     {/* Action Buttons */}
                     <div className="flex gap-2">
                       <button
-                        onClick={() => toggleVisibility(newsItem._id, newsItem.visible)}
+                        onClick={() =>
+                          toggleVisibility(newsItem._id, newsItem.visible)
+                        }
                         className={`flex-1 py-2 px-3 rounded text-sm flex items-center justify-center gap-1 transition-colors ${
                           newsItem.visible
-                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? "bg-green-100 text-green-700 hover:bg-green-200"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                         }`}
                       >
                         {newsItem.visible ? (
@@ -404,7 +423,7 @@ const NewsAndNotifications = () => {
                           </>
                         )}
                       </button>
-                      
+
                       <button
                         onClick={() => startEdit(newsItem)}
                         className="bg-blue-100 text-blue-700 hover:bg-blue-200 py-2 px-3 rounded text-sm flex items-center gap-1 transition-colors"
@@ -412,7 +431,7 @@ const NewsAndNotifications = () => {
                         <Edit className="h-3 w-3" />
                         Edit
                       </button>
-                      
+
                       <button
                         onClick={() => deleteNews(newsItem._id)}
                         className="bg-red-100 text-red-700 hover:bg-red-200 py-2 px-3 rounded text-sm flex items-center gap-1 transition-colors"
@@ -434,8 +453,12 @@ const NewsAndNotifications = () => {
             <div className="text-gray-400 mb-4">
               <Plus className="h-16 w-16 mx-auto" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No News Available</h3>
-            <p className="text-gray-600 mb-6">Get started by creating your first news article.</p>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No News Available
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Get started by creating your first news article.
+            </p>
             <button
               onClick={() => setShowCreateForm(true)}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"

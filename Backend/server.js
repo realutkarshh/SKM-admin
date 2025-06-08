@@ -42,6 +42,8 @@ app.get("/", (req, res) => {
   res.send("API is running 🎉");
 });
 
+
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,

@@ -15,8 +15,9 @@ const AdmissionPage = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token') || 'your-bearer-token-here';
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
       
-      const response = await fetch('https://skm-admin.onrender.com/api/admission', {
+      const response = await fetch(`${baseUrl}/admission`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

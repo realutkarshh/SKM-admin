@@ -1,49 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { Edit, Save, X, Upload, Check, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Edit, Save, X, Upload, Check, AlertCircle } from "lucide-react";
 
 const BankDetails = () => {
   const [bankDetails, setBankDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState('');
+  const [previewUrl, setPreviewUrl] = useState("");
 
   const [formData, setFormData] = useState({
-    accountName: '',
-    accountNumber: '',
-    bankName: '',
-    ifscCode: '',
-    branchName: '',
-    upiId: ''
+    accountName: "",
+    accountNumber: "",
+    bankName: "",
+    ifscCode: "",
+    branchName: "",
+    upiId: "",
   });
 
-  const BASE_URL = 'https://skm-admin.onrender.com/api';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   // Fetch current bank details
   const fetchBankDetails = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${BASE_URL}/bank`);
+      const response = await fetch(`${baseUrl}/bank`);
       const data = await response.json();
-      
+
       if (response.ok) {
         setBankDetails(data);
         setFormData({
-          accountName: data.accountName || '',
-          accountNumber: data.accountNumber || '',
-          bankName: data.bankName || '',
-          ifscCode: data.ifscCode || '',
-          branchName: data.branchName || '',
-          upiId: data.upiId || ''
+          accountName: data.accountName || "",
+          accountNumber: data.accountNumber || "",
+          bankName: data.bankName || "",
+          ifscCode: data.ifscCode || "",
+          branchName: data.branchName || "",
+          upiId: data.upiId || "",
         });
       } else {
-        setError('Failed to fetch bank details');
+        setError("Failed to fetch bank details");
       }
     } catch (err) {
-      setError('Error fetching bank details: ' + err.message);
+      setError("Error fetching bank details: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -56,9 +56,9 @@ const BankDetails = () => {
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -66,13 +66,13 @@ const BankDetails = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.type.startsWith('image/')) {
+      if (file.type.startsWith("image/")) {
         setSelectedFile(file);
         const reader = new FileReader();
         reader.onload = (e) => setPreviewUrl(e.target.result);
         reader.readAsDataURL(file);
       } else {
-        setError('Please select a valid image file');
+        setError("Please select a valid image file");
       }
     }
   };
@@ -81,50 +81,50 @@ const BankDetails = () => {
   const handleUpdate = async () => {
     try {
       setUpdating(true);
-      setError('');
-      setSuccess('');
+      setError("");
+      setSuccess("");
 
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        setError('Authentication required. Please login as admin.');
+        setError("Authentication required. Please login as admin.");
         return;
       }
 
       const formDataToSend = new FormData();
-      
+
       // Append all text fields
-      Object.keys(formData).forEach(key => {
+      Object.keys(formData).forEach((key) => {
         formDataToSend.append(key, formData[key]);
       });
 
       // Append file if selected
       if (selectedFile) {
-        formDataToSend.append('qr', selectedFile);
+        formDataToSend.append("qr", selectedFile);
       }
 
       const response = await fetch(`${BASE_URL}/bank`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: formDataToSend
+        body: formDataToSend,
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Bank details updated successfully!');
+        setSuccess("Bank details updated successfully!");
         setBankDetails(data.bank);
         setIsEditing(false);
         setSelectedFile(null);
-        setPreviewUrl('');
+        setPreviewUrl("");
         // Refresh the data
         await fetchBankDetails();
       } else {
-        setError(data.message || 'Failed to update bank details');
+        setError(data.message || "Failed to update bank details");
       }
     } catch (err) {
-      setError('Error updating bank details: ' + err.message);
+      setError("Error updating bank details: " + err.message);
     } finally {
       setUpdating(false);
     }
@@ -134,18 +134,18 @@ const BankDetails = () => {
   const handleCancel = () => {
     setIsEditing(false);
     setSelectedFile(null);
-    setPreviewUrl('');
-    setError('');
-    setSuccess('');
+    setPreviewUrl("");
+    setError("");
+    setSuccess("");
     // Reset form data to original values
     if (bankDetails) {
       setFormData({
-        accountName: bankDetails.accountName || '',
-        accountNumber: bankDetails.accountNumber || '',
-        bankName: bankDetails.bankName || '',
-        ifscCode: bankDetails.ifscCode || '',
-        branchName: bankDetails.branchName || '',
-        upiId: bankDetails.upiId || ''
+        accountName: bankDetails.accountName || "",
+        accountNumber: bankDetails.accountNumber || "",
+        bankName: bankDetails.bankName || "",
+        ifscCode: bankDetails.ifscCode || "",
+        branchName: bankDetails.branchName || "",
+        upiId: bankDetails.upiId || "",
       });
     }
   };
@@ -197,7 +197,7 @@ const BankDetails = () => {
                     ) : (
                       <Save size={18} />
                     )}
-                    {updating ? 'Saving...' : 'Save Changes'}
+                    {updating ? "Saving..." : "Save Changes"}
                   </button>
                   <button
                     onClick={handleCancel}
@@ -365,8 +365,10 @@ const BankDetails = () => {
                 {/* QR Code Section */}
                 <div className="lg:col-span-1">
                   <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Payment QR Code</h3>
-                    
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                      Payment QR Code
+                    </h3>
+
                     {/* Current QR Code */}
                     {bankDetails.qrCodeUrl && (
                       <div className="mb-4">
@@ -397,8 +399,13 @@ const BankDetails = () => {
                               htmlFor="qr-upload"
                               className="flex items-center justify-center w-full py-3 px-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all duration-200"
                             >
-                              <Upload className="text-gray-400 mr-2" size={20} />
-                              <span className="text-gray-600">Choose QR Code Image</span>
+                              <Upload
+                                className="text-gray-400 mr-2"
+                                size={20}
+                              />
+                              <span className="text-gray-600">
+                                Choose QR Code Image
+                              </span>
                             </label>
                           </div>
                         </div>
@@ -406,7 +413,9 @@ const BankDetails = () => {
                         {/* Preview */}
                         {previewUrl && (
                           <div>
-                            <p className="text-sm font-semibold text-gray-700 mb-2">Preview:</p>
+                            <p className="text-sm font-semibold text-gray-700 mb-2">
+                              Preview:
+                            </p>
                             <img
                               src={previewUrl}
                               alt="QR Code Preview"
@@ -422,13 +431,17 @@ const BankDetails = () => {
                   {bankDetails.updatedAt && (
                     <div className="mt-6 text-center">
                       <p className="text-sm text-gray-500">
-                        Last updated: {new Date(bankDetails.updatedAt).toLocaleDateString('en-IN', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
+                        Last updated:{" "}
+                        {new Date(bankDetails.updatedAt).toLocaleDateString(
+                          "en-IN",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
                       </p>
                     </div>
                   )}
@@ -436,7 +449,9 @@ const BankDetails = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="text-gray-500 text-xl">No bank details found</div>
+                <div className="text-gray-500 text-xl">
+                  No bank details found
+                </div>
                 <button
                   onClick={() => setIsEditing(true)}
                   className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200"
