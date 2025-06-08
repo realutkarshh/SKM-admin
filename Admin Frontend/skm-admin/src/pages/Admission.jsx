@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { AlertCircle, Users, Calendar, Phone, Mail, MapPin, GraduationCap, Home, FileText, Eye, EyeOff } from 'lucide-react';
+import { AlertCircle, Users, Calendar, Phone, Mail, MapPin, GraduationCap, Home, FileText, Eye, EyeOff, Download } from 'lucide-react';
 
 const AdmissionPage = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedRows, setExpandedRows] = useState(new Set());
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     fetchApplications();
@@ -38,6 +39,52 @@ const AdmissionPage = () => {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const downloadExcel = async () => {
+    try {
+      setDownloading(true);
+      const token = localStorage.getItem('token') || 'your-bearer-token-here';
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      
+      const response = await fetch(`${baseUrl}/admission/export/excel`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Unauthorized access. Please check your admin credentials.');
+        }
+        if (response.status === 404) {
+          throw new Error('No admissions found to export.');
+        }
+        throw new Error(`Failed to download Excel: ${response.status}`);
+      }
+
+      // Get the blob from response
+      const blob = await response.blob();
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `admissions_${new Date().toISOString().split('T')[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -118,8 +165,20 @@ const AdmissionPage = () => {
                 <p className="text-gray-600">Manage and review student applications</p>
               </div>
             </div>
-            <div className="bg-blue-100 px-4 py-2 rounded-lg">
-              <span className="text-blue-800 font-semibold">{applications.length} Applications</span>
+            <div className="flex items-center space-x-4">
+              <div className="bg-blue-100 px-4 py-2 rounded-lg">
+                <span className="text-blue-800 font-semibold">{applications.length} Applications</span>
+              </div>
+              {applications.length > 0 && (
+                <button
+                  onClick={downloadExcel}
+                  disabled={downloading}
+                  className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>{downloading ? 'Downloading...' : 'Download Sheet'}</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
