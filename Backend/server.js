@@ -6,20 +6,33 @@ const authRoutes = require("./routes/auth");
 const contactRoutes = require("./routes/contact");
 const admissionRoutes = require("./routes/admission");
 const newsRoutes = require("./routes/news");
-
+const bankRoutes = require("./routes/bank");
 
 
 dotenv.config();
 
 const app = express();
 
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',  // Next.js default port
+    'http://localhost:5173',  // Alternative frontend port
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api/admin", authRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/admission", admissionRoutes);
 app.use("/api/news", newsRoutes);
+app.use("/api/bank", bankRoutes);
 
 
 // Test Route

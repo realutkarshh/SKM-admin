@@ -17,11 +17,11 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    // Sign JWT
+    // Sign JWT with 24-hour expiry
     const token = jwt.sign(
       { id: admin._id, username: admin.username, isAdmin: admin.isAdmin },
       process.env.JWT_SECRET,
-      { expiresIn: "2h" }
+      { expiresIn: "24h" }
     );
 
     res.json({ token });
@@ -31,5 +31,6 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 module.exports = router;
