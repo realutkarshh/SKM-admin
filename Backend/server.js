@@ -18,7 +18,9 @@ const corsOptions = {
     'http://localhost:3000',  // Next.js default port
     'http://localhost:5173',  // Alternative frontend port
     'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001'
+    'http://127.0.0.1:3001',
+    'https://skm-admin-delta.vercel.app',
+    'https://skm-college-website.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
