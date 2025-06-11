@@ -102,7 +102,7 @@ const BankDetails = () => {
         formDataToSend.append("qr", selectedFile);
       }
 
-      const response = await fetch(`${BASE_URL}/bank`, {
+      const response = await fetch(`${baseUrl}/bank`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
