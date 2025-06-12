@@ -61,7 +61,7 @@ const NewsAndNotifications = () => {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/news`, {
+      const response = await fetch(`${baseUrl}/news`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${getAuthToken()}`,
@@ -85,7 +85,7 @@ const NewsAndNotifications = () => {
   // Update news
   const updateNews = async (id, updateData) => {
     try {
-      const response = await fetch(`${BASE_URL}/news/${id}`, {
+      const response = await fetch(`${baseUrl}/news/${id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${getAuthToken()}`,
@@ -109,7 +109,7 @@ const NewsAndNotifications = () => {
   const deleteNews = async (id) => {
     if (window.confirm("Are you sure you want to delete this news?")) {
       try {
-        const response = await fetch(`${BASE_URL}/news/${id}`, {
+        const response = await fetch(`${baseUrl}/news/${id}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${getAuthToken()}`,
