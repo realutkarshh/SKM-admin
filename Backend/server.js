@@ -21,7 +21,8 @@ const corsOptions = {
     'http://127.0.0.1:3001',
     'https://skm-admin-delta.vercel.app',
     'https://skm-college-website.vercel.app',
-    'https://skmcnp.org'
+    'https://skmcnp.org',
+    'https://www.skmcnp.org'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
